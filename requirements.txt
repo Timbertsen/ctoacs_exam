@@ -1,0 +1,11 @@
+ipython==8.9.0
+matplotlib==3.6.3
+numpy==1.24.1
+opencv_contrib_python==4.7.0.68
+opencv_python==4.7.0.68
+pandas==1.5.3
+Pillow==9.4.0
+Pillow==9.5.0
+tensorflow==2.10.1
+tensorflow_addons==0.20.0
+tensorflow_intel==2.11.0
