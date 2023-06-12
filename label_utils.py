@@ -369,23 +369,14 @@ def get_label_ranges(dataset):
     lst_dataset = tacs_tools.tensorslicedataset_2_list(dataset)
 
     for data in lst_dataset:
-        label_min_value_class = tf.reduce_min(data[1][0])
-        label_max_value_class = tf.reduce_max(data[1][0])
-        label_min_value_count = tf.reduce_min(data[1][1])
-        label_max_value_count = tf.reduce_max(data[1][1])
-        label_min_x = tf.reduce_min(data[1][2][0])
-        label_min_y = tf.reduce_min(data[1][2][1])
-        label_max_x = tf.reduce_max(data[1][2][2])
-        label_max_y = tf.reduce_max(data[1][2][3])
-
         # Update the overall minimum and maximum pixel values
-        min_value_class = tf.minimum(min_value_class, label_min_value_class).numpy()
-        max_value_class = tf.maximum(max_value_class, label_max_value_class).numpy()
-        min_value_class = tf.minimum(min_value_count, label_min_value_count).numpy()
-        max_value_class = tf.maximum(max_value_count, label_max_value_count).numpy()
-        min_value_class = tf.minimum(min_x, label_min_x).numpy()
-        max_value_class = tf.maximum(min_y, label_min_y).numpy()
-        min_value_class = tf.minimum(max_x, label_max_x).numpy()
-        max_value_class = tf.maximum(max_y, label_max_y).numpy()
+        min_value_class = tf.minimum(min_value_class, data[1][0])
+        max_value_class = tf.maximum(max_value_class, data[1][0])
+        min_value_count = tf.minimum(min_value_count, data[1][1])
+        max_value_count = tf.maximum(max_value_count, data[1][1])
+        min_x = tf.minimum(min_x, data[1][2][0])
+        min_y = tf.minimum(min_y, data[1][2][1])
+        max_x = tf.maximum(max_x, data[1][2][2])
+        max_y = tf.maximum(max_y, data[1][2][3])
 
-    return min_value_class, max_value_class, min_value_count, max_value_count, min_x, min_y, max_x, max_y
+    return (min_value_class, max_value_class, min_value_count, max_value_count, min_x, min_y, max_x, max_y)

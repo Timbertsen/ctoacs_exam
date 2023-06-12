@@ -13,6 +13,7 @@ import matplotlib.figure
 import matplotlib.pyplot as plt
 from IPython.display import display
 import pandas as pd 
+import cv2
 
 
 def _load_dataset(data_type: str) -> List[Any]:
@@ -105,7 +106,8 @@ def show_labeled_image(image_or_entry: Union[List[Any], bytes, np.ndarray],
                        image_size: Tuple[int, int] = None,
                        box_color: Tuple[int, int, int] = (255, 0, 0),
                        box_line: int = 2,
-                       bool_display: bool = True) -> None:
+                       bool_display: bool = True,
+                       bool_print: bool = False) -> None:
 
     count = None
     box = None
@@ -169,7 +171,6 @@ def show_labeled_image(image_or_entry: Union[List[Any], bytes, np.ndarray],
     name = name[0].upper() + name[1:]
 
     if box is not None:
-        print(box)
         x_min = int(box[0] * image_data.shape[1])
         y_min = int(box[1] * image_data.shape[0])
         x_max = int(box[2] * image_data.shape[1])
@@ -209,8 +210,16 @@ def show_labeled_image(image_or_entry: Union[List[Any], bytes, np.ndarray],
     if count is not None:
         count_str = (f"{count} x " if count_score is None else
                      f"{count} ({count_score:.1%}) x ")
+    if bool_print:
+        print(f"{count_str}{index_str} [{name}]")
 
-    print(f"{count_str}{index_str} [{name}]")
+    if box is not None:
+        thickness = 1
+        fontScale = 0.6
+        font = cv2.FONT_HERSHEY_TRIPLEX
+        text_message = count_str + name
+        text_left_buttom = (x_min - 3, y_min - 3)
+        image_data = cv2.putText(image_data, text_message , text_left_buttom, font, fontScale, box_color, thickness, cv2.LINE_AA)
 
     image = tf.keras.utils.array_to_img(image_data)
 
@@ -228,8 +237,9 @@ def is_one_hot(arr):
         return False
 
     # check if sums to 1 (use axis=None for 1-D array)
-    if np.sum(arr, axis=None) != 1:
-        return False
+    # muss bei predictions nicht der Fall sein
+    #if np.sum(arr, axis=None) != 1:
+    #    return False
 
     return True
 
@@ -344,6 +354,12 @@ def tensorslicedataset_2_list(dataset):
     for image, label in dataset.as_numpy_iterator():
         lst_dataset.append([image, label])
     return lst_dataset
+
+def tensorslicedataset_2_array(dataset):
+    array_dataset = []
+    for image, label in dataset.as_numpy_iterator():
+        array_dataset.append([image, label])
+    return np.array(array_dataset)
 
 
 def create_class_balance_table(dataset, max_objects, classes):

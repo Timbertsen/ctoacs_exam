@@ -100,11 +100,8 @@ def resize_image_and_bbox_tf(image, bbox, angle, desired_size=224):
 
 def rotate_label_tf(image, label, angle):
     corners = label_utils.get_corners_tf(image, label)
-    print(f"corners: {corners}")
     rotated_corners = label_utils.rotate_box_tf(corners, image, angle, tf.shape(image)[1]/2, tf.shape(image)[0]/2, tf.shape(image)[0], tf.shape(image)[1])
-    print(f"rotated corners {rotated_corners}")
     enclosed_rotated_corners = label_utils.get_enclosing_box_tf(rotated_corners)
-    print(f"enclosed_rotated_corners {enclosed_rotated_corners}")
     return enclosed_rotated_corners
 
 def rotate_image_tf(image, angle):
@@ -137,11 +134,8 @@ def rotate_randomly_image_and_label(image, label):
     angle = random.uniform(0, 2 * math.pi)
     rotated_image = rotate_image_tf(image, angle)
     rotated_bbox = rotate_label_tf(image,label,angle)
-    print(f"rotated_bbox = {rotated_bbox}")
     rotated_resized_image, rotated_resized_bbox = resize_image_and_bbox_tf(rotated_image, rotated_bbox, angle, desired_size=224)
-    print(f"resized_box {rotated_resized_bbox}")
     new_label = overwrite_label_bbox_tf(rotated_resized_image, label, rotated_resized_bbox)
-    print(f"new label {new_label}")
     return     rotated_resized_image, new_label
 
 
@@ -222,14 +216,47 @@ def rgb_to_grayscale(image, label):
     return rgb_grayscale, label
 
 def adjust_randomly_saturation(image, label):
-    saturation_factor = random.uniform(1, 7)
+    # Determine the range of the image
+    min_val = tf.reduce_min(image)
+    max_val = tf.reduce_max(image)
+
+    # If the image is in the range [0,255], scale it to [0,1]
+    if min_val >= 0 and max_val > 1:
+        image = image / 255.0
+
+    # If the image is in the range [-1,1], scale it to [0,1]
+    elif min_val < 0 and max_val <= 1:
+        image = (image + 1) / 2.0
+    saturation_factor = tf.random.uniform([], 0.6, 3)
+
     saturated = tf.image.adjust_saturation(image, saturation_factor)
+    # Scale the saturated image back to its original range
+    if min_val >= 0 and max_val > 1:
+        saturated = saturated * 255.0
+    elif min_val < 0 and max_val <= 1:
+        saturated = saturated * 2.0 - 1
     return saturated, label
 
 def adjust_randomly_brightness(image, label):
-    brightness_factor = random.uniform(-0.7, 0.7)
-    bright = tf.image.adjust_brightness(image, brightness_factor)
-    return bright, label
+    # Determine the range of the image
+    min_val = tf.reduce_min(image)
+    max_val = tf.reduce_max(image)
+
+    # If the image is in the range [0,255], scale it to [0,1]
+    if min_val >= 0 and max_val > 1:
+        image = image / 255.0
+
+    # If the image is in the range [-1,1], scale it to [0,1]
+    elif min_val < 0 and max_val <= 1:
+        image = (image + 1) / 2.0
+    brightness_factor = tf.random.uniform([], -0.2, 0.2)
+    brightened = tf.image.adjust_brightness(image, brightness_factor)
+    # Scale the brightened image back to its original range
+    if min_val >= 0 and max_val > 1:
+        brightened = brightened * 255.0
+    elif min_val < 0 and max_val <= 1:
+        brightened = brightened * 2.0 - 1
+    return brightened, label
 
 
 
