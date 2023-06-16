@@ -7,4 +7,3 @@ pandas==1.5.3
 Pillow==9.5.0
 tensorflow==2.10.1
 tensorflow_addons==0.20.0
-
