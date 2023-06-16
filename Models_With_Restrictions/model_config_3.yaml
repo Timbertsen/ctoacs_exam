@@ -1,0 +1,56 @@
+layers:
+- activation: relu
+  filters: 64
+  kernel_size: &id001 !!python/tuple
+  - 3
+  - 3
+  type: Conv2D
+- pool_size: &id002 !!python/tuple
+  - 2
+  - 2
+  type: MaxPooling2D
+- activation: relu
+  filters: 128
+  kernel_size: *id001
+  type: Conv2D
+- pool_size: *id002
+  type: MaxPooling2D
+- activation: relu
+  filters: 256
+  kernel_size: *id001
+  type: Conv2D
+- pool_size: *id002
+  type: MaxPooling2D
+- activation: relu
+  filters: 512
+  kernel_size: *id001
+  type: Conv2D
+- pool_size: *id002
+  type: MaxPooling2D
+- type: Flatten
+- activation: relu
+  type: Dense
+  units: 254
+- rate: 0.3
+  type: Dropout
+losses:
+  out_class: categorical_crossentropy
+  out_count: mean_squared_error
+  out_location: mean_squared_error
+metrics:
+  out_class: categorical_accuracy
+  out_count: mae
+  out_location: iou
+output_layers:
+- activation: softmax
+  name: out_class
+  type: Dense
+  units: 4
+- activation: linear
+  name: out_count
+  type: Dense
+  units: 1
+- name: out_location
+  type: Dense
+  units: 4
+type: cnn
