@@ -320,11 +320,12 @@ def save_model_and_history(model: tf.keras.Model,
                            history: Dict[str, Any],
                            directory: str = None,
                            limit_skip_first: int = 0,
-                           show_figure: bool = False) -> None:
+                           show_figure: bool = False,
+                           name = False) -> None:
 
     if directory is None:
         directory = os.path.abspath(
-            f'results/{int(time.time())}_e-{history["meta"]["epochs"]}')
+            f'results/{int(time.time())}_e-{history["meta"]["epochs"]}_{name}')
 
     os.makedirs(directory,
                 exist_ok=True)
