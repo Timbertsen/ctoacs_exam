@@ -1,0 +1,89 @@
+layers:
+- filters: 32
+  kernel_size: &id001 [3, 3]
+  padding: same
+  type: Conv2D
+- type: BatchNormalization
+- activation: relu
+  type: Activation
+- pool_size: *id001
+  type: MaxPooling2D
+- filters: 64
+  kernel_size: *id001
+  padding: same
+  type: Conv2D
+- type: BatchNormalization
+- activation: relu
+  type: Activation
+- pool_size: [2, 2]
+  type: MaxPooling2D
+- filters: 128
+  kernel_size: *id001
+  padding: same
+  type: Conv2D
+- type: BatchNormalization
+- activation: relu
+  type: Activation
+- pool_size: [2, 2]
+  type: MaxPooling2D
+- filters: 128
+  kernel_size: *id001
+  padding: same
+  type: Conv2D
+- type: BatchNormalization
+- activation: relu
+  type: Activation
+- pool_size: [2, 2]
+  type: MaxPooling2D
+- filters: 256
+  kernel_size: *id001
+  padding: same
+  type: Conv2D
+- type: BatchNormalization
+- activation: relu
+  type: Activation
+- type: Flatten
+- units: 254
+  type: Dense
+- type: BatchNormalization
+- activation: relu
+  type: Activation
+- rate: 0.3
+  type: Dropout
+layers_before_output:
+- units: 254
+  type: Dense
+- type: BatchNormalization
+- activation: relu
+  type: Activation
+- units: 254
+  type: Dense
+- type: BatchNormalization
+- activation: relu
+  type: Activation
+- units: 254
+  type: Dense
+- type: BatchNormalization
+- activation: relu
+  type: Activation
+losses:
+  out_class: categorical_crossentropy
+  out_count: mean_squared_error
+  out_location: mean_squared_error
+metrics:
+  out_class: categorical_accuracy
+  out_count: mae
+  out_location: iou
+output_layers:
+- units: 4
+  type: Dense
+  activation: softmax
+  name: out_class
+- units: 1
+  type: Dense
+  activation: linear
+  name: out_count
+- units: 4
+  type: Dense
+  name: out_location
+type: cnn
