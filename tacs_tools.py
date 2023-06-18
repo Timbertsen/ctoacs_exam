@@ -325,7 +325,7 @@ def save_model_and_history(model: tf.keras.Model,
 
     if directory is None:
         directory = os.path.abspath(
-            f'results/{int(time.time())}_e-{history["meta"]["epochs"]}_{name}')
+            f'results/{int(time.time())}_{name}')
 
     os.makedirs(directory,
                 exist_ok=True)
