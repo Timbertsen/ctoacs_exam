@@ -11,6 +11,8 @@ def get_label_name(label, classes):
         index = np.argmax(label[0])
     else:
         index = label[0]
+    if not isinstance(index, int):
+        index = np.argmax(label[0])
     name = str(index) if classes is None else classes[index]
     name = name[0].upper() + name[1:]
     return name
@@ -224,7 +226,7 @@ def draw_rect(img, cords, label = None, classes=None, color = None):
     
 
     img = cv2.rectangle(img.copy(), pt1, pt2, color, int(max(img.shape[:2])/200))
-    if label:
+    if label is not None:
         if tacs_tools.is_one_hot(label[0]):
             class_index = np.argmax(label[0])
         else:
