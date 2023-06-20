@@ -8,7 +8,6 @@ import tensorflow as tf
 import numpy as np
 import cv2
 
-
 def display_datasets_in_html(dataset_train, dataset_val):
 
     html_file_path = 'inspect_data.html'
