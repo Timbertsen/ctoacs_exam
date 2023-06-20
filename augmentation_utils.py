@@ -7,6 +7,7 @@ import random
 import tensorflow_addons as tfa
 import math
 
+
 def resize_image_tf(image, desired_size=224):
     #tf_image = image_utils.convert_to_tf_image(image)
     tf_image = tf.image.resize_with_pad(image, desired_size, desired_size)
